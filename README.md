@@ -17,11 +17,12 @@
 local-rag-knowledge-base/
 ├── step1_test.py          # 第1步：验证对话接口
 ├── step2_embedding.py     # 第2步：嵌入接口 + 余弦相似度
-├── step3_chunker.py       # 第3步：文本分块器（待实现）
-├── step4_vectorstore.py   # 第4步：向量库（待实现）
-├── step5_loader.py        # 第5步：文档加载器（待实现）
-├── step6_rag_pipeline.py  # 第6步：RAG 管线串联（待实现）
-├── step7_cli.py           # 第7步：交互命令行界面（待实现）
+├── step3_chunker.py       # 第3步：文本分块器
+├── step4_vectorstore.py   # 第4步：向量库
+├── step5_loader.py        # 第5步：文档加载器
+├── step6_rag_pipeline.py  # 第6步：RAG 管线串联
+├── step7_cli.py           # 第7步：交互命令行界面
+├── step8_optimizations.py # 第8步：优化与扩展
 ├── data/                  # 知识库文档 + 向量数据（不入库）
 └── .gitignore
 ```
@@ -44,28 +45,30 @@ local-rag-knowledge-base/
 | 4 | `step4_vectorstore.py` | 实现向量库——存储文档块 + 对应向量，支持相似度检索 | [OK] 已完成 |
 | 5 | `step5_loader.py` | 实现文档加载器——从文件系统读取 Markdown/TXT/PDF 文档 | [OK] 已完成 |
 | 6 | `step6_rag_pipeline.py` | 串联完整管线：加载文档 → 分块 → 向量化 → 检索 → 生成回答 | [OK] 已完成 |
-| 7 | `step7_cli.py` | 搭建交互式命令行界面，支持提问和查看检索结果 | 待实现 |
-| 8 | 优化与扩展 | 多文档类型支持、检索质量评估、重排序、对话历史 | 待实现 |
+| 7 | `step7_cli.py` | 搭建交互式命令行界面，支持提问和查看检索结果 | [OK] 已完成 |
+| 8 | `step8_optimizations.py` | 4 个优化模块——多文档类型、检索质量评估、关键词重排序、多轮对话 | [OK] 已完成 |
 
 ### 数据流
 
 ```
 文档文件               知识库构建（离线）                问答（在线）
 ───────               ──────────────                  ────────
-                                                       
+
  Markdown  ──→ [5.文档加载器] ──→ 纯文本               用户提问
-                                    │                     │
-                                    ▼                     ▼
+  HTML/CSV        │                     │                │
+  /JSON ──→ [8.扩展加载器]            ▼                  ▼
                               [3.文本分块器]        [4.向量库检索]
                                     │                     │
-                                    ▼                     │
-                              文档块列表              Top-K 相关块
+                                    ▼                     ▼
+                              文档块列表         [8.重排序] → Top-K
                                     │                     │
                                     ▼                     │
                               [2.嵌入接口]                │
                                     │                     │
                                     ▼                     ▼
                               [4.向量库存储]  ──→  [6.RAG管线]
+                                                      │
+                                              [8.对话历史]
                                                       │
                                                       ▼
                                                  [1.LLM对话]

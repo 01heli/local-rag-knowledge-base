@@ -9,6 +9,7 @@ venv/
 
 # 知识库数据（文档 + 向量库，体积大不入库）
 data/
+knowledge_base.json
 *.db
 *.sqlite
 

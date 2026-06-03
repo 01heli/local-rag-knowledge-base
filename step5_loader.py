@@ -71,6 +71,21 @@ def load_single(filepath: str) -> dict | None:
                 "content": content,
             }
 
+        elif ext in (".html", ".htm"):
+            print(f"  [提示] HTML 格式需要 step8_optimizations 模块")
+            print(f"         请使用: from step8_optimizations import load_single_extended")
+            return None
+
+        elif ext == ".csv":
+            print(f"  [提示] CSV 格式需要 step8_optimizations 模块")
+            print(f"         请使用: from step8_optimizations import load_single_extended")
+            return None
+
+        elif ext == ".json":
+            print(f"  [提示] JSON 格式需要 step8_optimizations 模块")
+            print(f"         请使用: from step8_optimizations import load_single_extended")
+            return None
+
         else:
             print(f"  [跳过] 不支持的格式 ({ext}): {filepath}")
             return None
@@ -90,7 +105,7 @@ def load_documents(directory: str) -> list[dict]:
         print(f"[错误] 目录不存在: {directory}")
         return []
 
-    supported = {".txt", ".md", ".pdf"}
+    supported = {".txt", ".md", ".pdf", ".html", ".htm", ".csv", ".json"}
     results = []
 
     entries = sorted(os.listdir(directory))
